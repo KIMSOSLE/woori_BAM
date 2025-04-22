@@ -17,7 +17,6 @@ public class Main {
 			System.out.println("명령어) " + cmd);
 
 			if (cmd.equals("exit")) {
-//			if (cmd == "exit") {
 				break;
 			}
 		} sc.close();
