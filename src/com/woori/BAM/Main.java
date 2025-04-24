@@ -1,5 +1,7 @@
 package com.woori.BAM;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -7,41 +9,70 @@ public class Main {
 
 		System.out.println("== 프로그램 시작 ==");
 		Scanner sc = new Scanner(System.in);
-		
+
 		int id = 1;
-		// 저장을 위한 변수이기 때문에 반복문 밖에 선언
-		// 반복문 내 선언 시 매번 초기화됨
+		List<Article> articles = new ArrayList<>();
+		// List 인터페이스 - ArryList 구현 클레스
+
 		while (true) {
 			System.out.printf("명령어) ");
-			String cmd = sc.nextLine().trim(); // 공백제거를 위해 trim() 함수 사용
+			String cmd = sc.nextLine().trim();
 
 			if (cmd.length() == 0) {
-				// 문자열의 길이가 0인지 확인 즉, cmd가 빈 문자열("")인지 검사
-				// 사용자가 아무 명령어를 입력하지 않았다면
 				System.out.println("명령어를 입력해 주세요.");
-				continue; // 아래쪽에 있는 출력이 실행되지 않도록 기다리기 위해 사용
+				continue;
 			}
-			
+
 			if (cmd.equals("article list")) {
 				System.out.println("게시글이 없습니다.");
-			} 
-			else if (cmd.equals("article write")) {
+			} else if (cmd.equals("article write")) {
 				System.out.print("제목 : ");
 				String title = sc.nextLine().trim();
 				System.out.print("내용 : ");
 				String body = sc.nextLine().trim();
+				
+//				Article article = new Article(); // 최적화 X, // article은 지역변수 즉, 저장되지 않음
+				Article article = new Article(id, title, body); // 최적화 작업 : 생성자를 이용해 초기화, 인자를 통해 생성자 호출
+				
+//				article.id = id;
+//				article.title = title;
+//				article.body = body;
+
+				// 진짜 저장은 아래의 문장을 통해서 진행
+				articles.add(article); // List 구조인 ArrayList 객체 articles에 저장
+				
+				// 최적화2
+//				articles.add(new Article(id, title, body));
+
 				System.out.println(id + "번 글이 생성되었습니다.");
 				id++;
-			}
-			else {
+			} else if (cmd.equals("test")) { // 명령어 test로 articles 저장된 내용 확인
+				for (int i = 0; i < articles.size(); i++) {
+					System.out.println(articles.get(i).id);
+					System.out.println(articles.get(i).title);
+					System.out.println(articles.get(i).body);
+				}
+			} else {
 				System.out.println("존재하지 않는 명령어 입니다.");
 			}
-			
+
 			if (cmd.equals("exit")) {
 				break;
 			}
 		}
 		sc.close();
 		System.out.println("== 프로그램 종료 ==");
+	}
+}
+
+class Article {
+	int id;
+	String title;
+	String body;
+
+	public Article(int id, String title, String body) {
+		this.id = id;
+		this.title = title;
+		this.body = body;
 	}
 }
