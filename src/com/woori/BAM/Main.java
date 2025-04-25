@@ -36,7 +36,7 @@ public class Main {
 				if (articles.size() == 0) {
 					System.out.println("존재하는 게시글이 없습니다.");
 					continue;
-				} 
+				}
 				System.out.printf("번호    |     제목\n");
 				for (int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
@@ -44,15 +44,22 @@ public class Main {
 				}
 			} else if (cmd.startsWith("article detail ")) { // 입력된 번호는 cmdBits[2] 위치
 				String[] cmdBits = cmd.split(" "); // split 문자열 자를 때 사용
-				
+
 //				boolean articleChk = false; // 참 거짓 체크. 객체지향프로그래밍 위한 준비
 				// 객체로 대체 (변수 vs 객체) 변수 1개, 객체(번호, 제목, 내용)
-				
+
 				Article foundArticle = null; // null 검증 (객체지향프로그래밍)
-				// 개발자가 고민해야 할 영역. (ex. try catch문)
-				
-				int id = Integer.parseInt(cmdBits[2]); // 재정의. 가독성↑, 재활용↑
-				
+
+				int id = 0;
+
+				try { // Exception 발생할 예상 코드 블럭
+					id = Integer.parseInt(cmdBits[2]);
+				} catch (NumberFormatException e) { // (예외타입 변수명)
+					System.out.println("숫자로 입력해주세요.");
+					continue; // 이하 실행이 되지 않도록 조치 → while문 작동
+				} catch (Exception e) {
+					// 그밖의 모든 Exception 처리
+				}
 				for (Article article : articles) {
 					if (article.id == id) { // 문자로 된 숫자를 숫자로 바꿔줌
 //						articleChk = true;
