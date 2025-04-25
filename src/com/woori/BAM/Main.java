@@ -16,10 +16,15 @@ public class Main {
 			System.out.printf("명령어) ");
 			String cmd = sc.nextLine().trim();
 
+			if (cmd.equals("exit")) {
+				break;
+			}
+			
 			if (cmd.length() == 0) {
 				System.out.println("명령어를 입력해 주세요.");
 				continue;
 			}
+			
 			if (cmd.equals("article write")) {
 				System.out.printf("제목 : ");
 				String title = sc.nextLine().trim();
@@ -37,52 +42,89 @@ public class Main {
 					System.out.println("존재하는 게시글이 없습니다.");
 					continue;
 				}
+				
 				System.out.printf("번호    |     제목\n");
 				for (int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
 					System.out.printf("%d      |     %s\n", article.id, article.title);
 				}
-			} else if (cmd.startsWith("article detail ")) { // 입력된 번호는 cmdBits[2] 위치
-				String[] cmdBits = cmd.split(" "); // split 문자열 자를 때 사용
-
-//				boolean articleChk = false; // 참 거짓 체크. 객체지향프로그래밍 위한 준비
-				// 객체로 대체 (변수 vs 객체) 변수 1개, 객체(번호, 제목, 내용)
+				
+			} else if (cmd.startsWith("article detail ")) {
+				String[] cmdBits = cmd.split(" ");
 
 				Article foundArticle = null; // null 검증 (객체지향프로그래밍)
 
 				int id = 0;
 
-				try { // Exception 발생할 예상 코드 블럭
+				try {
 					id = Integer.parseInt(cmdBits[2]);
-				} catch (NumberFormatException e) { // (예외타입 변수명)
+				} catch (NumberFormatException e) {
 					System.out.println("숫자로 입력해주세요.");
-					continue; // 이하 실행이 되지 않도록 조치 → while문 작동
+					continue;
 				} catch (Exception e) {
-					// 그밖의 모든 Exception 처리
 				}
+
 				for (Article article : articles) {
-					if (article.id == id) { // 문자로 된 숫자를 숫자로 바꿔줌
-//						articleChk = true;
+					if (article.id == id) {
 						foundArticle = article;
 						break;
 					}
 				}
-//				if (articleChk == false) {
+				
 				if (foundArticle == null) {
 					System.out.println(id + "번 게시글이 존재하지 않습니다.");
-					continue; // 매우 중요! 아래에서 NumllPointException 발생되지 않도록 조치
+					continue;
 				}
 				System.out.println("번호 : " + foundArticle.id);
 				System.out.println("날짜 : ~~~");
 				System.out.println("제목 : " + foundArticle.title);
 				System.out.println("내용 : " + foundArticle.body);
-				// 출력문 위치 바꾼 이유 : 재활용을 위한 준비. 공통으로 사용하는 메소드 만듦
 
-			} else {
-				System.out.println("존재하지 않는 명령어 입니다.");
+			} else if (cmd.startsWith("article delete ")) {
+				String[] cmdBits = cmd.split(" ");
+				Article foundArticle = null;
+				int id = 0;
+
+				try {
+					id = Integer.parseInt(cmdBits[2]);
+				} catch (NumberFormatException e) {
+					System.out.println("숫자로 입력해주세요.");
+					continue;
+				} catch (Exception e) {
+				}
+
+				int foundIndex = -1; // null과 같은 개념, -1로 초기화
+				int indexId = 0;
+				
+				// 향상된 for문 인덱스 사용X, 일반 for문 사용 → 수정
+//				for (Article article : articles) {
+//					if (article.id == id) {
+//						foundArticle = article;
+//						foundIndex = indexId;
+//						break;
+//					}
+//					indexId++;
+//				}
+				
+				// 인덱스 방식
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+					if (article.id == id) {
+						break;
+					}
+				}
+				
+				if (foundArticle == null) {
+					System.out.println(id + "번 게시글이 존재하지 않습니다.");
+					continue;
+				}
+//				articles.remove(foundArticle); // 2가지 방법 존재 / 객체 삭제
+				articles.remove(foundIndex); // 인덱스에 저장된 객체 삭제
+				System.out.println(id + "번 게시글이 삭제 되었습니다.");
 			}
-			if (cmd.equals("exit")) {
-				break;
+			
+			else {
+				System.out.println("존재하지 않는 명령어 입니다.");
 			}
 		}
 		sc.close();
