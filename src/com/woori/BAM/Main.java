@@ -31,14 +31,7 @@ public class Main {
 				System.out.printf("내용 : ");
 				String body = sc.nextLine().trim();
 				
-//				// 회원가입, 게시글 수정 등 공통 모듈 만드는 것 → 메서드 작성
-//				Util.getDateStr();
-//				LocalDateTime now = LocalDateTime.now(); // 현재 날짜와 시간
-//				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"); // 날짜와 시간 포맷 지정
-//				String formatedNow = now.format(formatter); // 문자열로 변환
-//				String regDate = formatedNow; // 재활용 용도
-
-				Article article = new Article(lastArticleId, title, body, Util.getDateStr());
+				Article article = new Article(lastArticleId, title, body, Util.getDateStr(), 0);
 				articles.add(article);
 
 				System.out.println(lastArticleId + "번 글이 생성되었습니다.");
@@ -50,10 +43,10 @@ public class Main {
 					continue;
 				}
 
-				System.out.printf("번호    |     제목    |     내용    |         날짜/시간\n");
+				System.out.printf("번호     |     제목     |     내용     |         날짜/시간         |     조회수\n");
 				for (int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
-					System.out.printf("%d       |     %s     |     %s     |     %s\n", article.id, article.title, article.body, article.regDate);
+					System.out.printf("%d        |     %s      |     %s      |    %s    |       %d\n", article.id, article.title, article.body, article.regDate, article.viewCnt);
 				}
 
 			} else if (cmd.startsWith("article detail ")) {
@@ -78,15 +71,18 @@ public class Main {
 					}
 				}
 				
-				
 				if (foundArticle == null) {
 					System.out.println(id + "번 게시글이 존재하지 않습니다.");
 					continue;
 				}
+				
+				foundArticle.viewCnt++; // 위 null 검증 통과했으므로 조회수 1 증가시킴
+				
 				System.out.println("번호 : " + foundArticle.id);
 				System.out.printf("날짜/시간 : " + foundArticle.regDate);
 				System.out.println("\n제목 : " + foundArticle.title);
 				System.out.println("내용 : " + foundArticle.body);
+				System.out.println("조회수 : " + foundArticle.viewCnt);
 
 			} else if (cmd.startsWith("article delete ")) {
 				String[] cmdBits = cmd.split(" ");
@@ -100,8 +96,6 @@ public class Main {
 					continue;
 				} catch (Exception e) {
 				}
-
-				int foundIndex = -1; // null과 같은 개념, -1로 초기화
 
 				for (Article article : articles) {
 					if (article.id == id) {
@@ -167,11 +161,13 @@ class Article {
 	String title;
 	String body;
 	String regDate;
+	int viewCnt;
 
-	public Article(int id, String title, String body, String regDate) {
+	public Article(int id, String title, String body, String regDate, int viewCnt) {
 		this.id = id;
 		this.title = title;
 		this.body = body;
 		this.regDate = regDate;
+		this.viewCnt = viewCnt;
 	}
 }
