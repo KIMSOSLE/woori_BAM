@@ -19,12 +19,12 @@ public class Main {
 			if (cmd.equals("exit")) {
 				break;
 			}
-			
+
 			if (cmd.length() == 0) {
 				System.out.println("명령어를 입력해 주세요.");
 				continue;
 			}
-			
+
 			if (cmd.equals("article write")) {
 				System.out.printf("제목 : ");
 				String title = sc.nextLine().trim();
@@ -42,13 +42,13 @@ public class Main {
 					System.out.println("존재하는 게시글이 없습니다.");
 					continue;
 				}
-				
-				System.out.printf("번호    |     제목\n");
+
+				System.out.printf("번호    |     제목    |     내용\n");
 				for (int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
-					System.out.printf("%d      |     %s\n", article.id, article.title);
+					System.out.printf("%d       |     %s     |     %s\n", article.id, article.title, article.body);
 				}
-				
+
 			} else if (cmd.startsWith("article detail ")) {
 				String[] cmdBits = cmd.split(" ");
 
@@ -70,7 +70,7 @@ public class Main {
 						break;
 					}
 				}
-				
+
 				if (foundArticle == null) {
 					System.out.println(id + "번 게시글이 존재하지 않습니다.");
 					continue;
@@ -94,35 +94,57 @@ public class Main {
 				}
 
 				int foundIndex = -1; // null과 같은 개념, -1로 초기화
-				int indexId = 0;
-				
-				// 향상된 for문 인덱스 사용X, 일반 for문 사용 → 수정
-//				for (Article article : articles) {
-//					if (article.id == id) {
-//						foundArticle = article;
-//						foundIndex = indexId;
-//						break;
-//					}
-//					indexId++;
-//				}
-				
-				// 인덱스 방식
-				for (int i = 0; i < articles.size(); i++) {
-					Article article = articles.get(i);
+
+				for (Article article : articles) {
 					if (article.id == id) {
+						foundArticle = article;
 						break;
 					}
 				}
-				
+
 				if (foundArticle == null) {
 					System.out.println(id + "번 게시글이 존재하지 않습니다.");
 					continue;
 				}
-//				articles.remove(foundArticle); // 2가지 방법 존재 / 객체 삭제
-				articles.remove(foundIndex); // 인덱스에 저장된 객체 삭제
+				articles.remove(foundArticle);
 				System.out.println(id + "번 게시글이 삭제 되었습니다.");
+
+			} else if (cmd.startsWith("article modify ")) {
+				String[] cmdBits = cmd.split(" ");
+				Article foundArticle = null;
+				int id = 0;
+
+				try {
+					id = Integer.parseInt(cmdBits[2]);
+				} catch (NumberFormatException e) {
+					System.out.println("숫자로 입력해주세요.");
+					continue;
+				} catch (Exception e) {
+				}
+
+				for (Article article : articles) {
+					if (article.id == id) {
+						foundArticle = article;
+						break;
+					}
+				}
+
+				if (foundArticle == null) {
+					System.out.println(id + "번 게시글이 존재하지 않습니다.");
+					continue;
+				}
+				
+				System.out.println("수정할 제목 : " );
+				String title = sc.nextLine().trim();
+				System.out.println("수정할 내용 : " );
+				String body = sc.nextLine().trim();
+				
+				foundArticle.title = title;
+				foundArticle.body = body;
+				
+				System.out.println(id + "번 게시글이 수정 되었습니다.");
 			}
-			
+
 			else {
 				System.out.println("존재하지 않는 명령어 입니다.");
 			}
