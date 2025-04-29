@@ -1,8 +1,9 @@
 package com.woori.BAM.dto;
-
 // DTO(Data Transfer Object) → getter, setter
+
 public class Article {
-	// private 접근제어자 사용
+
+	// DB와 연결되기 때문에 보안상 private 접근제어자 사용
 	private int id;
 	private String title;
 	private String body;
@@ -17,11 +18,11 @@ public class Article {
 		this.viewCnt = viewCnt;
 	}
 
-	public int getId() { // get → read
+	public int getId() { // (카멜표기법) Getter → read, return 받음
 		return id;
 	}
 
-	public void setId(int id) { // set → save
+	public void setId(int id) { // (카멜표기법) Setter → save, this(전역변수) 사용
 		this.id = id;
 	}
 
