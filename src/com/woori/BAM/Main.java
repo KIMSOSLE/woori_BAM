@@ -5,14 +5,20 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-	static List<Article> articles = new ArrayList<>();
-	static int lastArticleId = 1;
+	static List<Article> articles;
+	static int lastArticleId;
+
+	// 시작과 동시에 초기화, 관례 또는 가독성↑
+	static {
+		articles = new ArrayList<>();
+		lastArticleId = 1;
+	}
 
 	public static void main(String[] args) {
 		System.out.println("== 프로그램 시작 ==");
 		Scanner sc = new Scanner(System.in);
 
-		makeTestData(); // 중요★ 해당 메서드가 만들어지는 위치는? static 메서드일 수 밖에 없는 이유는?
+		makeTestData();
 
 		while (true) {
 			System.out.printf("명령어) ");
@@ -159,15 +165,6 @@ public class Main {
 	}
 
 	private static void makeTestData() {
-		// 1단계 → 객체 생성
-//		Article articles1 = new Article(lastArticleId, "제목1", "내용1", Util.getDateStr(), 10);
-//		articles.add(articles1);
-//		lastArticleId++;
-
-		// 2단계 → 후위연산자 사용, 한 줄로 최적화
-//		articles.add(new Article(lastArticleId++, "제목1", "내용1", Util.getDateStr(), 10));
-
-		// 3단계 → 반복문
 		for (int i = 1; i <= 5; i++) {
 			articles.add(new Article(lastArticleId++, "제목" + i, "내용" + i, Util.getDateStr(), i * 10));
 		}
