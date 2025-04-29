@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+	static List<Article> articles = new ArrayList<>();
+	static int lastArticleId = 1;
+
 	public static void main(String[] args) {
 		System.out.println("== 프로그램 시작 ==");
 		Scanner sc = new Scanner(System.in);
 
-		int lastArticleId = 1; // 게시글 번호, 마지막 게시글 번호의 의미로 수정
-		List<Article> articles = new ArrayList<>();
+		makeTestData(); // 중요★ 해당 메서드가 만들어지는 위치는? static 메서드일 수 밖에 없는 이유는?
 
 		while (true) {
 			System.out.printf("명령어) ");
@@ -30,7 +32,7 @@ public class Main {
 				String title = sc.nextLine().trim();
 				System.out.printf("내용 : ");
 				String body = sc.nextLine().trim();
-				
+
 				Article article = new Article(lastArticleId, title, body, Util.getDateStr(), 0);
 				articles.add(article);
 
@@ -43,17 +45,16 @@ public class Main {
 					continue;
 				}
 
-				System.out.printf("번호     |     제목     |     내용     |         날짜/시간         |     조회수\n");
+				System.out.printf("번호     |      제목      |      내용      |         날짜/시간         |     조회수\n");
 				for (int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
-					System.out.printf("%d        |     %s      |     %s      |    %s    |       %d\n", article.id, article.title, article.body, article.regDate, article.viewCnt);
+					System.out.printf("%d        |     %s      |     %s      |    %s    |       %d\n", article.id,
+							article.title, article.body, article.regDate, article.viewCnt);
 				}
 
 			} else if (cmd.startsWith("article detail ")) {
 				String[] cmdBits = cmd.split(" ");
-
 				Article foundArticle = null; // null 검증 (객체지향프로그래밍)
-
 				int id = 0;
 
 				try {
@@ -70,14 +71,14 @@ public class Main {
 						break;
 					}
 				}
-				
+
 				if (foundArticle == null) {
 					System.out.println(id + "번 게시글이 존재하지 않습니다.");
 					continue;
 				}
-				
+
 				foundArticle.viewCnt++; // 위 null 검증 통과했으므로 조회수 1 증가시킴
-				
+
 				System.out.println("번호 : " + foundArticle.id);
 				System.out.printf("날짜/시간 : " + foundArticle.regDate);
 				System.out.println("\n제목 : " + foundArticle.title);
@@ -108,6 +109,7 @@ public class Main {
 					System.out.println(id + "번 게시글이 존재하지 않습니다.");
 					continue;
 				}
+
 				articles.remove(foundArticle);
 				System.out.println(id + "번 게시글이 삭제 되었습니다.");
 
@@ -135,15 +137,15 @@ public class Main {
 					System.out.println(id + "번 게시글이 존재하지 않습니다.");
 					continue;
 				}
-				
-				System.out.println("수정할 제목 : " );
+
+				System.out.println("수정할 제목 : ");
 				String title = sc.nextLine().trim();
-				System.out.println("수정할 내용 : " );
+				System.out.println("수정할 내용 : ");
 				String body = sc.nextLine().trim();
-				
+
 				foundArticle.title = title; // 수정된 값을 객체에 저장 → 수정
 				foundArticle.body = body;
-				
+
 				System.out.println(id + "번 게시글이 수정 되었습니다.");
 			}
 
@@ -151,8 +153,24 @@ public class Main {
 				System.out.println("존재하지 않는 명령어 입니다.");
 			}
 		}
+
 		sc.close();
 		System.out.println("== 프로그램 종료 ==");
+	}
+
+	private static void makeTestData() {
+		// 1단계 → 객체 생성
+//		Article articles1 = new Article(lastArticleId, "제목1", "내용1", Util.getDateStr(), 10);
+//		articles.add(articles1);
+//		lastArticleId++;
+
+		// 2단계 → 후위연산자 사용, 한 줄로 최적화
+//		articles.add(new Article(lastArticleId++, "제목1", "내용1", Util.getDateStr(), 10));
+
+		// 3단계 → 반복문
+		for (int i = 1; i <= 5; i++) {
+			articles.add(new Article(lastArticleId++, "제목" + i, "내용" + i, Util.getDateStr(), i * 10));
+		}
 	}
 }
 
