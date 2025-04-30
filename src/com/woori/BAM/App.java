@@ -9,14 +9,14 @@ import com.woori.BAM.uil.Util;
 
 public class App {
 	
-	// static 접근제어자 삭제
-	List<Article> articles;
+	// 전역변수 → this (자기 자신 의미, 객체)
+	List<Article> articles; // List 타입의 articles
 	int lastArticleId;
 	
-	// 1회성 객체 생성 후 run() 실행
+	// 생성자를 통해 초기화 (기존 static 코드 제거 상태)
 	App() {
-		articles = new ArrayList<>();
-		lastArticleId = 1;
+		articles = new ArrayList<>(); // 데이터의 구조 = ArrayList 형태의 객체 생성
+		lastArticleId = 1;            // 객체 객수 정할 필요X, 사용할 때마다 증가
 	}
 
 	void run() {
