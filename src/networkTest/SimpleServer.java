@@ -14,6 +14,7 @@ public class SimpleServer {
 		try (ServerSocket serverSocket = new ServerSocket(port)) {
 			System.out.println("서버가 포트 " + port + "에서 대기 중입니다...");
 
+			// 소켓 연결
 			Socket clientSocket = serverSocket.accept();
 			System.out.println("클라이언트 연결됨: " + clientSocket.getInetAddress());
 
@@ -28,6 +29,7 @@ public class SimpleServer {
 
 			clientSocket.close(); // 다른 클라이언트를 위해 닫음
 			System.out.println("서버 종료");
+			
 		} catch (IOException e) { // 방화벽, 예상 외의 예외 발생
 			e.printStackTrace(); // 로그 처리
 		}

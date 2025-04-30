@@ -12,6 +12,7 @@ public class SimpleClient {
 		int port = 9999; // 서버의 대기 중인 포트 번호
 
 		try (Socket socket = new Socket(serverIP, port)) { // IP + 포트 → 서버와 TCP 연결 → 성공 시 socket 객체를 통해 데이터 주고 받음
+			
 			// 서버에 메시지 전송 (요청 1)
 			PrintWriter out = new PrintWriter(socket.getOutputStream(), true); // 중요
 			out.println("안녕하세요");
