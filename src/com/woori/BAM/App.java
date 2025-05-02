@@ -10,8 +10,8 @@ import com.woori.BAM.uil.Util;
 public class App {
 	
 	// 전역변수 → this (자기 자신 의미, 객체)
-	List<Article> articles; // List 타입의 articles
-	int lastArticleId;
+	private List<Article> articles; 
+	private int lastArticleId;
 	
 	// 생성자를 통해 초기화 (기존 static 코드 제거 상태)
 	App() {
@@ -170,6 +170,8 @@ public class App {
 	}
 
 	private void makeTestData() {
+		System.out.println("5개의 Test Data가 생성되었습니다.");
+		
 		for (int i = 1; i <= 5; i++) {
 			articles.add(new Article(lastArticleId++, "제목" + i, "내용" + i, Util.getDateStr(), i * 10));
 		}

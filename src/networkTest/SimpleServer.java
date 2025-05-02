@@ -8,30 +8,31 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class SimpleServer {
-	public static void main(String[] args) {
-		int port = 9999; // 서버 포트
+    public static void main(String[] args) {
+        int port = 9999; // 서버 포트
 
-		try (ServerSocket serverSocket = new ServerSocket(port)) {
-			System.out.println("서버가 포트 " + port + "에서 대기 중입니다...");
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("서버 연결 완료! 클라이언트 대기 중...");
+            
+            // 클라이언트 연결 받기
+            Socket clientSocket = serverSocket.accept();
+            System.out.println("클라이언트가 연결되었습니다.");
 
-			// 소켓 연결
-			Socket clientSocket = serverSocket.accept();
-			System.out.println("클라이언트 연결됨: " + clientSocket.getInetAddress());
+            // 클라이언트로부터 메시지 받기
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            String clientMessage = in.readLine();
+            System.out.println("클라이언트 :  " + clientMessage);
 
-			// 데이터 수신
-			BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-			String clientMessage = in.readLine();
-			System.out.println("클라이언트로부터 수신: " + clientMessage);
+            // 클라이언트에게 응답 보내기
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out.println("네, 안녕하세요");
 
-			// 데이터 송신
-			PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true); // 중요
-			out.println("접속 감사합니다.");
-
-			clientSocket.close(); // 다른 클라이언트를 위해 닫음
-			System.out.println("서버 종료");
-			
-		} catch (IOException e) { // 방화벽, 예상 외의 예외 발생
-			e.printStackTrace(); // 로그 처리
-		}
-	}
+            // 클라이언트 소켓 닫기
+            clientSocket.close();
+            System.out.println("서버 종료");
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
