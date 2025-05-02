@@ -8,15 +8,13 @@ import com.woori.BAM.dto.Article;
 import com.woori.BAM.uil.Util;
 
 public class App {
-	
-	// 전역변수 → this (자기 자신 의미, 객체)
-	private List<Article> articles; 
+
+	private List<Article> articles;
 	private int lastArticleId;
-	
-	// 생성자를 통해 초기화 (기존 static 코드 제거 상태)
+
 	App() {
-		articles = new ArrayList<>(); // 데이터의 구조 = ArrayList 형태의 객체 생성
-		lastArticleId = 1;            // 객체 객수 정할 필요X, 사용할 때마다 증가
+		articles = new ArrayList<>();
+		lastArticleId = 1;
 	}
 
 	void run() {
@@ -64,24 +62,14 @@ public class App {
 				}
 
 			} else if (cmd.startsWith("article detail ")) {
-				String[] cmdBits = cmd.split(" ");
-				Article foundArticle = null;
-				int id = 0;
 
-				try {
-					id = Integer.parseInt(cmdBits[2]);
-				} catch (NumberFormatException e) {
-					System.out.println("숫자로 입력해주세요.");
+				int id = getCmdId(cmd); // id or 0
+
+				if (id == 0) { // id가 0으로 return 시 처리 로직 보강
 					continue;
-				} catch (Exception e) {
 				}
 
-				for (Article article : articles) {
-					if (article.getId() == id) {
-						foundArticle = article;
-						break;
-					}
-				}
+				Article foundArticle = getArticleById(id); // article or null
 
 				if (foundArticle == null) {
 					System.out.println(id + "번 게시글이 존재하지 않습니다.");
@@ -91,30 +79,20 @@ public class App {
 				foundArticle.setViewCnt(foundArticle.getViewCnt() + 1);
 
 				System.out.println("번호 : " + foundArticle.getId());
-				System.out.printf("날짜/시간 : " + foundArticle.getRegDate());
-				System.out.println("\n제목 : " + foundArticle.getTitle());
+				System.out.println("날짜/시간 : " + foundArticle.getRegDate());
+				System.out.println("제목 : " + foundArticle.getTitle());
 				System.out.println("내용 : " + foundArticle.getBody());
 				System.out.println("조회수 : " + foundArticle.getViewCnt());
 
 			} else if (cmd.startsWith("article delete ")) {
-				String[] cmdBits = cmd.split(" ");
-				Article foundArticle = null;
-				int id = 0;
 
-				try {
-					id = Integer.parseInt(cmdBits[2]);
-				} catch (NumberFormatException e) {
-					System.out.println("숫자로 입력해주세요.");
+				int id = getCmdId(cmd); // id or 0
+
+				if (id == 0) { // id가 0으로 return 시 처리 로직 보강
 					continue;
-				} catch (Exception e) {
 				}
 
-				for (Article article : articles) {
-					if (article.getId() == id) {
-						foundArticle = article;
-						break;
-					}
-				}
+				Article foundArticle = getArticleById(id); // article or null
 
 				if (foundArticle == null) {
 					System.out.println(id + "번 게시글이 존재하지 않습니다.");
@@ -125,24 +103,14 @@ public class App {
 				System.out.println(id + "번 게시글이 삭제 되었습니다.");
 
 			} else if (cmd.startsWith("article modify ")) {
-				String[] cmdBits = cmd.split(" ");
-				Article foundArticle = null;
-				int id = 0;
 
-				try {
-					id = Integer.parseInt(cmdBits[2]);
-				} catch (NumberFormatException e) {
-					System.out.println("숫자로 입력해주세요.");
+				int id = getCmdId(cmd); // id or 0
+
+				if (id == 0) { // id가 0으로 return 시 처리 로직 보강
 					continue;
-				} catch (Exception e) {
 				}
 
-				for (Article article : articles) {
-					if (article.getId() == id) {
-						foundArticle = article;
-						break;
-					}
-				}
+				Article foundArticle = getArticleById(id); // article or null
 
 				if (foundArticle == null) {
 					System.out.println(id + "번 게시글이 존재하지 않습니다.");
@@ -169,9 +137,31 @@ public class App {
 		System.out.println("== 프로그램 종료 ==");
 	}
 
+	private Article getArticleById(int id) {
+		for (Article article : articles) {
+			if (article.getId() == id) {
+				return article; // return article 시 메서드 종료
+			}
+		}
+		return null;
+	}
+
+	private int getCmdId(String cmd) {
+		String[] cmdBits = cmd.split(" ");
+		int id = 0;
+
+		try {
+			id = Integer.parseInt(cmdBits[2]);
+			return id; // id를 넘겨주고 메서드 종료
+		} catch (NumberFormatException e) {
+			System.out.println("명령어가 올바르지 않습니다.");
+			return 0; // "asd" → 0
+		}
+	}
+
 	private void makeTestData() {
 		System.out.println("5개의 Test Data가 생성되었습니다.");
-		
+
 		for (int i = 1; i <= 5; i++) {
 			articles.add(new Article(lastArticleId++, "제목" + i, "내용" + i, Util.getDateStr(), i * 10));
 		}
